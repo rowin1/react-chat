@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 import { USER_CONNECTED, LOGOUT } from '../Events';
 import LoginForm from './LoginForm';
+import ChatContainer from './chats/ChatContainer'
 
-const socketUrl = "http://192.168.1.9:3001" // This may change
+const socketUrl = "http://192.168.1.2:3001" // This may change
 export default class Layout extends Component {
 
   constructor(props) {
@@ -30,7 +31,7 @@ export default class Layout extends Component {
   setUser = (user) => {
     const { socket } = this.state;
     socket.emit(USER_CONNECTED, user);
-    this.setState(user); // user from LoginForm is an id and name, so the state of 'user' remains null
+    this.setState({user});
   }
 
   logout = () => {
@@ -41,11 +42,16 @@ export default class Layout extends Component {
 
   render() {
     const { title } = this.props;
-    const { socket } = this.state;
+    const { socket, user } = this.state;
     return (
       <div className="container">
-        <LoginForm socket={socket} setUser={this.setUser} />
-      </div>
+        {
+          !user ?
+          <LoginForm socket={socket} setUser={this.setUser} />
+          :
+          <ChatContainer socket={socket} user={user} logout={this.logout} />
+        }
+        </div>
     );
   }
 }

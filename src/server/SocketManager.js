@@ -23,6 +23,12 @@ module.exports = function(socket) {
     io.emit(USER_CONNECTED, connectedUsers);
     console.log(connectedUsers);
   })
+
+  socket.on(LOGOUT, () => {
+    connectedUsers = removeUser(connectedUsers, socket.user.name);
+    // io.emit(USER_DISCONNECTED, connectedUsers);
+    console.log("Disconnect", connectedUsers);
+  })
 }
 
 function addUser(userList, user) {
